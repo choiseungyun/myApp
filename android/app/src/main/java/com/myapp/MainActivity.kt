@@ -1,5 +1,7 @@
 package com.myapp
 
+import android.os.Bundle; // 추가
+
 import com.facebook.react.ReactActivity
 import com.facebook.react.ReactActivityDelegate
 import com.facebook.react.defaults.DefaultNewArchitectureEntryPoint.fabricEnabled
