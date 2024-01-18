@@ -1,0 +1,47 @@
+{
+  "project_info": {
+    "project_number": "612195951781",
+    "firebase_url": "https://weare-1203.firebaseio.com",
+    "project_id": "weare-1203",
+    "storage_bucket": "weare-1203.appspot.com"
+  },
+  "client": [
+    {
+      "client_info": {
+        "mobilesdk_app_id": "1:612195951781:android:92d59491765221f517194c",
+        "android_client_info": {
+          "package_name": "kr.weare.myApp"
+        }
+      },
+      "oauth_client": [
+        {
+          "client_id": "612195951781-d7bdvuid3s98q4u3895j71itt81ochap.apps.googleusercontent.com",
+          "client_type": 3
+        }
+      ],
+      "api_key": [
+        {
+          "current_key": "AIzaSyAVZOOjPW00LTcJK9SVBTgXXxvC2YKmKbQ"
+        }
+      ],
+      "services": {
+        "appinvite_service": {
+          "other_platform_oauth_client": [
+            {
+              "client_id": "612195951781-d7bdvuid3s98q4u3895j71itt81ochap.apps.googleusercontent.com",
+              "client_type": 3
+            },
+            {
+              "client_id": "612195951781-olu50rjendj420lv2upvva5plqq2j2pt.apps.googleusercontent.com",
+              "client_type": 2,
+              "ios_info": {
+                "bundle_id": "kr.weare.pushtest"
+              }
+            }
+          ]
+        }
+      }
+    }
+  ],
+  "configuration_version": "1"
+}
