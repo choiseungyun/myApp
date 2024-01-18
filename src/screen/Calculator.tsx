@@ -1,10 +1,11 @@
 import {Android} from '@mui/icons-material';
 import {useState} from 'react';
-import {Dimensions, Platform, TouchableOpacity, View} from 'react-native';
+import {Alert, Dimensions, Platform, TouchableOpacity, View} from 'react-native';
 
 import {MD2Colors, Text} from 'react-native-paper';
-import {SafeAreaView} from 'react-native-safe-area-context';
+import {SafeAreaProvider, SafeAreaView} from 'react-native-safe-area-context';
 import styled from 'styled-components/native';
+import useCalculator from '../hooks/useCalculator';
 
 const COLOR = {
   RESULT: '#4e4c51',
@@ -13,7 +14,12 @@ const COLOR = {
   NUM: '#5c5674',
 };
 const {height, width} = Dimensions.get('window');
-const Button = ({text, onPress, flex, type}: any) => {
+var rowCount: number = 6;
+{
+  __DEV__ && (rowCount = 7);
+}
+
+const Button = ({text, onPress, flex, type, isSelected}: any) => {
   let backgroundColor = 'transparent';
   switch (type) {
     case 'reset':
@@ -39,13 +45,12 @@ const Button = ({text, onPress, flex, type}: any) => {
         backgroundColor,
         justifyContent: 'center',
         alignItems: 'center',
-        borderWidth: 0.2,
+        borderWidth: isSelected ? 1 : 0.2,
         borderColor: MD2Colors.black,
-        height: height / 6 - 40,
-      }}>
-      <Text style={{color: '#ffffff', fontSize: 20, fontWeight: 'bold'}}>
-        {text}
-      </Text>
+        height: height / rowCount - 40,
+      }}
+      onPress={onPress}>
+      <Text style={{color: '#ffffff', fontSize: 20, fontWeight: 'bold'}}>{text}</Text>
     </TouchableOpacity>
   );
 };
@@ -63,138 +68,90 @@ const InputContainer = styled.View`
   padding: 5px;
   width: 100%;
   height: ${Platform.select({
-    ios: height / 6 - 30,
-    android: height / 6 + 35,
+    ios: height / rowCount - 30,
+    android: height / rowCount + 35,
   })}px;
 `;
 
 function Calculator() {
-  const [input, setInput] = useState(0);
-  const [result, setResult] = useState(null);
-  const [currentOperator, setCurrentOperator] = useState(null);
-  const [tempInput, setTempInput] = useState(null);
-  const [tempOperator, setTempOperator] = useState(null);
-
-  const onPressNum = (num: number) => {
-    setInput(num);
-  };
+  const {input, result, currentOperator, tempInput, tempOperator, onPressNum, onPressOperator, onPressReset} = useCalculator();
 
   return (
-    <SafeAreaView
-      style={{
-        flex: 1,
-        padding: 5,
-        alignItems: 'center',
-        alignContent: 'center',
-        justifyContent: 'center',
-      }}>
-      <View
+    <SafeAreaProvider>
+      <SafeAreaView
         style={{
           flex: 1,
-          width: '95%',
-          borderWidth: 10,
-          borderColor: MD2Colors.green300,
+          padding: 1,
           alignItems: 'center',
+          alignContent: 'center',
+          justifyContent: 'center',
         }}>
-        <Text
+        <View
           style={{
-            fontSize: 20,
-            fontWeight: '400',
-            height: 30,
-            justifyContent: 'center',
-            verticalAlign: 'middle',
+            flex: 1,
+            width: '100%',
+            //borderWidth: 5,
+            //borderColor: MD2Colors.green300,
+            alignItems: 'center',
           }}>
-          계산기
-        </Text>
-        <InputContainer>
-          <Text>{input}</Text>
-        </InputContainer>
-        <ButtonContainer>
-          <Button
-            type="reset"
-            key={`btnAc`}
-            text="AC"
-            onPress={() => null}
-            flex={3}
-          />
-          <Button
-            type="operator"
-            key={`btnDiv`}
-            text="/"
-            onPress={() => null}
-            flex={1}
-          />
-        </ButtonContainer>
+          <Text
+            style={{
+              fontSize: 20,
+              fontWeight: '400',
+              height: 30,
+              justifyContent: 'center',
+              verticalAlign: 'middle',
+            }}>
+            계산기
+          </Text>
+          {__DEV__ && (
+            <>
+              <View style={{flex: 1}}>
+                <Text>Input : {input}</Text>
+                <Text>currentOperator : {currentOperator}</Text>
+                <Text>result : {result}</Text>
+                <Text>tempInput : {tempInput}</Text>
+                <Text>tempOperator : {tempOperator}</Text>
+              </View>
+            </>
+          )}
 
-        <ButtonContainer>
-          {[7, 8, 9].map(num => (
-            <Button
-              type="num"
-              key={`btn${num}`}
-              text={`${num}`}
-              onPress={() => null}
-              flex={1}
-            />
-          ))}
-          <Button
-            type="operator"
-            key={`btnMul`}
-            text="X"
-            onPress={() => null}
-            flex={1}
-          />
-        </ButtonContainer>
+          <InputContainer>
+            <Text style={{color: 'white', fontSize: 25, fontWeight: 'bold'}}>{input}</Text>
+          </InputContainer>
+          <ButtonContainer>
+            <Button type="reset" key={`btnAc`} text="AC" onPress={() => onPressReset()} flex={3} isSelected={currentOperator === 'C'} />
+            <Button type="operator" key={`btnDiv`} text="/" onPress={() => onPressOperator('/')} flex={1} isSelected={currentOperator === '/'} />
+          </ButtonContainer>
 
-        <ButtonContainer>
-          {[4, 5, 6].map(num => (
-            <Button
-              type="num"
-              key={`btn${num}`}
-              text={`${num}`}
-              onPress={() => null}
-              flex={1}
-            />
-          ))}
-          <Button
-            type="operator"
-            key={`btnMinus`}
-            text="-"
-            onPress={() => null}
-            flex={1}
-          />
-        </ButtonContainer>
+          <ButtonContainer>
+            {[7, 8, 9].map(num => (
+              <Button type="num" key={`btn${num}`} text={`${num}`} onPress={() => onPressNum(num)} flex={1} />
+            ))}
+            <Button type="operator" key={`btnMul`} text="*" onPress={() => onPressOperator('*')} flex={1} isSelected={currentOperator === '*'} />
+          </ButtonContainer>
 
-        <ButtonContainer>
-          {[1, 2, 3].map(num => (
-            <Button
-              type="num"
-              key={`btn${num}`}
-              text={`${num}`}
-              onPress={() => null}
-              flex={1}
-            />
-          ))}
-          <Button
-            type="operator"
-            key={`btnPlus`}
-            text="+"
-            onPress={() => null}
-            flex={1}
-          />
-        </ButtonContainer>
+          <ButtonContainer>
+            {[4, 5, 6].map(num => (
+              <Button type="num" key={`btn${num}`} text={`${num}`} onPress={() => onPressNum(num)} flex={1} />
+            ))}
+            <Button type="operator" key={`btnMinus`} text="-" onPress={() => onPressOperator('-')} flex={1} isSelected={currentOperator === '-'} />
+          </ButtonContainer>
 
-        <ButtonContainer>
-          <Button
-            type="num"
-            key={`btn0`}
-            text="0"
-            onPress={() => null}
-            flex={3}
-          />
-          <Button type="operator" text="=" onPress={() => null} flex={1} />
-        </ButtonContainer>
-      </View>
-    </SafeAreaView>
+          <ButtonContainer>
+            {[1, 2, 3].map(num => (
+              <Button type="num" key={`btn${num}`} text={`${num}`} onPress={() => onPressNum(num)} flex={1} />
+            ))}
+            <Button type="operator" key={`btnPlus`} text="+" onPress={() => onPressOperator('+')} flex={1} isSelected={currentOperator === '+'} />
+          </ButtonContainer>
+
+          <ButtonContainer>
+            <Button type="num" key={`btn0`} text="0" onPress={() => onPressNum(0)} flex={3} />
+            <Button type="operator" text="=" onPress={() => onPressOperator('=')} isSelected={currentOperator === '='} flex={1} />
+          </ButtonContainer>
+        </View>
+      </SafeAreaView>
+    </SafeAreaProvider>
   );
 }
 
