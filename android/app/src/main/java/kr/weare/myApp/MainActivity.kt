@@ -1,4 +1,4 @@
-package com.myapp
+package kr.weare.myApp
 
 import android.os.Bundle; // 추가
 

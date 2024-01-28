@@ -1,4 +1,4 @@
-package com.myapp
+package kr.weare.myApp
 
 import android.app.Application
 import com.facebook.react.PackageList
