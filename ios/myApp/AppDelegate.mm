@@ -8,14 +8,19 @@
 
 - (BOOL)application:(UIApplication *)application didFinishLaunchingWithOptions:(NSDictionary *)launchOptions
 {
+  
+  // [START configure_firebase]
+  if ([FIRApp defaultApp] == nil) {
+      [FIRApp configure];
+  }
+  // [END configure_firebase]
+  
+  
   self.moduleName = @"myApp";
   // You can add your custom initial props in the dictionary below.
   // They will be passed down to the ViewController used by React Native.
   self.initialProps = @{};
 
-  if ([FIRApp defaultApp] == nil) {
-      [FIRApp configure];
-    }
   
   
   return [super application:application didFinishLaunchingWithOptions:launchOptions];

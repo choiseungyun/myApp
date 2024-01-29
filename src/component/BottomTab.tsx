@@ -1,29 +1,30 @@
-import {useState} from 'react';
+import React, {useState} from 'react';
 import {BottomNavigation} from 'react-native-paper';
 import {MD2Colors as Colors} from 'react-native-paper';
 import HomeScreen from '../screen/HomeScreen';
-import DetailsScreen from '../screen/DetailScreen';
 import Calculator from '../screen/Calculator';
 import Calendar from '../screen/Calendar';
-import {sendMessage} from '../utils/sendMessage';
+import PushScreen from '../screen/PushScreen';
 
-const BottomTab = ({reqUrl}: any) => {
+function BottomTab(props: any) {
   const [index, setIndex] = useState(0);
-  const [goUrl, setGoUrl] = useState(reqUrl);
+  const [goUrl, setGoUrl] = useState(props.reqUrl);
+  const [messaging, setMessaging] = useState(props.messaging);
   const [routes] = useState([
     {key: 'home', title: 'Home', focusedIcon: 'home', unfocusedIcon: 'home'},
     {key: 'calculator', title: 'Calculator', focusedIcon: 'calculator', unfocusedIcon: 'calculator'},
     {key: 'calendar', title: 'Calendar', focusedIcon: 'calendar', unfocusedIcon: 'calendar'},
-    {key: 'api', title: 'API', focusedIcon: 'database', unfocusedIcon: 'database'},
+    {key: 'push', title: 'Push', focusedIcon: 'laptop', unfocusedIcon: 'laptop'},
     {key: 'chat', title: 'Chat', focusedIcon: 'chat', unfocusedIcon: 'chat'},
   ]);
 
   const homeRoute = (props: any) => <HomeScreen {...props} url={goUrl} />;
+  const pushRoute = (props: any) => <PushScreen {...props} messaging={messaging} />;
   const renderScene = BottomNavigation.SceneMap({
     home: homeRoute,
     calculator: Calculator,
     calendar: Calendar,
-    api: DetailsScreen,
+    push: pushRoute,
     chat: homeRoute,
   });
 
@@ -59,6 +60,6 @@ const BottomTab = ({reqUrl}: any) => {
       }}
     />
   );
-};
+}
 
 export default BottomTab;
