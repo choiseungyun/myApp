@@ -1,14 +1,14 @@
-import React, {useEffect, useRef, useState} from 'react';
-import {Dimensions, Platform, StyleSheet, Text, View} from 'react-native';
-import {IconButton, PaperProvider} from 'react-native-paper';
+import React, {createContext, useContext, useEffect, useRef, useState} from 'react';
+import {StyleSheet} from 'react-native';
 import {SafeAreaProvider, SafeAreaView} from 'react-native-safe-area-context';
 import WebView from 'react-native-webview';
 import {WebViewNativeEvent} from 'react-native-webview/lib/WebViewTypes';
-const {width, height} = Dimensions.get('window');
+import {PushContext} from '../App';
 
 function HomeScreen(props: any) {
   const webViewRef = useRef<WebView>(null);
-  const [goUrl, setGoUrl] = useState(props.url);
+
+  const {displayUrl} = useContext(PushContext);
 
   // const userAgent = Platform.select({ios: 'FITAMIN_IOS', android: 'FITAMIN_ANDROID'});
 
@@ -17,8 +17,8 @@ function HomeScreen(props: any) {
     //setGoUrl(state.url);
   };
   useEffect(() => {
-    console.log(`Home UseEffect ${goUrl}`);
-  }, [goUrl]);
+    //
+  }, []);
 
   return (
     <SafeAreaProvider>
@@ -29,7 +29,7 @@ function HomeScreen(props: any) {
           allowFileAccess={true}
           scalesPageToFit={true}
           source={{
-            uri: goUrl === undefined ? 'https://blog.naver.com/symj2001' : goUrl,
+            uri: displayUrl === '' ? 'https://blog.naver.com/symj2001' : displayUrl,
             // headers: {'User-Agent': userAgent},
           }}
           ref={webViewRef}
@@ -38,10 +38,6 @@ function HomeScreen(props: any) {
     </SafeAreaProvider>
   );
 }
-
-HomeScreen.defaultProps = {
-  url: 'https://blog.naver.com/symj2001',
-};
 
 const styles = StyleSheet.create({
   safeAreaView: {

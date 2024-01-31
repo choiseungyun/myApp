@@ -1,15 +1,16 @@
-import React, {useState} from 'react';
+import React, {createContext, useContext, useEffect, useState} from 'react';
 import {BottomNavigation} from 'react-native-paper';
 import {MD2Colors as Colors} from 'react-native-paper';
 import HomeScreen from '../screen/HomeScreen';
 import Calculator from '../screen/Calculator';
 import Calendar from '../screen/Calendar';
 import PushScreen from '../screen/PushScreen';
+import {PushContext} from '../App';
 
 function BottomTab(props: any) {
   const [index, setIndex] = useState(0);
-  const [goUrl, setGoUrl] = useState(props.reqUrl);
-  const [messaging, setMessaging] = useState(props.messaging);
+  const {changeUrl} = useContext(PushContext);
+
   const [routes] = useState([
     {key: 'home', title: 'Home', focusedIcon: 'home', unfocusedIcon: 'home'},
     {key: 'calculator', title: 'Calculator', focusedIcon: 'calculator', unfocusedIcon: 'calculator'},
@@ -18,30 +19,35 @@ function BottomTab(props: any) {
     {key: 'chat', title: 'Chat', focusedIcon: 'chat', unfocusedIcon: 'chat'},
   ]);
 
-  const homeRoute = (props: any) => <HomeScreen {...props} url={goUrl} />;
-  const pushRoute = (props: any) => <PushScreen {...props} messaging={messaging} />;
   const renderScene = BottomNavigation.SceneMap({
-    home: homeRoute,
+    home: HomeScreen,
     calculator: Calculator,
     calendar: Calendar,
-    push: pushRoute,
-    chat: homeRoute,
+    push: PushScreen,
+    chat: HomeScreen,
   });
 
   function tabChange(index: number): void {
     setIndex(index);
     console.log(`index::: ${index}`);
+
     switch (index) {
       case 0:
-        setGoUrl('https://blog.naver.com/symj2001');
+        changeUrl('https://www.daum.net');
+        break;
+      case 3:
         break;
       case 4:
-        setGoUrl('https://www.naver.com');
+        changeUrl('https://www.google.com');
         break;
       default:
         break;
     }
   }
+
+  useEffect(() => {
+    //
+  }, []);
 
   return (
     <BottomNavigation

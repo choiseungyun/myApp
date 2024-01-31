@@ -20,7 +20,7 @@ export const firebaseConfig = {
 //const app = initializeApp(firebaseConfig);
 
 export async function getFCMToken(messaging: any) {
-  let returnToken = '';
+  let returnToken = null;
   // 이름관련 Warning 처리
   if (!firebase.apps.length) {
     firebase.initializeApp(firebaseConfig);
@@ -44,9 +44,11 @@ export async function getFCMToken(messaging: any) {
       })
       .catch(function (err: any) {
         console.log('fcm에러 getToken: ', Platform.OS.toString(), err);
+        returnToken = null;
       });
   } else {
     console.log('requestPermission.', authStatus);
+    returnToken = null;
   }
   return returnToken;
 }
